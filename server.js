@@ -78,7 +78,7 @@ app.get('/games/:game_id/actions/:player_id', function(req, res) {
   res.send(game.actions[player_id] || 'wait');
 });
 
-var server = app.listen(3000, function () {
+var server = app.listen((process.env.PORT || 5000), function () {
 
   var host = server.address().address
   var port = server.address().port
