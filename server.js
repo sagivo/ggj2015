@@ -1,9 +1,9 @@
 
 var express = require('express')
-var bodyParser = require('body-parser');
+//var bodyParser = require('body-parser');
 var app = express()
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({ extended: true }));
 
 var games = {};
 
@@ -15,9 +15,13 @@ app.param('game_id', function (req, res, next, game_id) {
   req.game_id = game_id;
   next();
 })
+app.param('player_id', function (req, res, next, player_id) {
+  req.player_id = player_id;
+  next();
+})
 
-app.post('/lfg', function (req, res) {
-  var player_id = '' + req.body.player_id;
+app.post('/lfg/:player_id', function (req, res) {
+  var player_id = req.player_id;
   var game_id = null;
   if(player_id_to_game_id[player_id]) {
     game_id = player_id_to_game_id[player_id];
@@ -38,8 +42,8 @@ app.post('/lfg', function (req, res) {
   res.json({game_id: game_id});
 });
 
-app.post('/games/:game_id/sync', function(req, res) {
-  var player_id = req.body.player_id;
+app.post('/games/:game_id/sync/:player_id', function(req, res) {
+  var player_id = req.player_id;
   var game_id = req.game_id;
   var game = games[game_id];
   game.actions[player_id] = null;
@@ -51,8 +55,8 @@ app.post('/games/:game_id/sync', function(req, res) {
   }
 });
 
-app.post('/games/:game_id/actions', function(req, res) {
-  var player_id = req.body.player_id;
+app.post('/games/:game_id/actions/:player_id', function(req, res) {
+  var player_id = req.player_id;
   var game_id = req.game_id;
   var game = games[game_id];
   if(game.actions[player_id]) {
@@ -63,10 +67,11 @@ app.post('/games/:game_id/actions', function(req, res) {
   }
 });
 
-app.get('/games/:game_id/actions', function(req, res) {
+app.get('/games/:game_id/actions/:player_id', function(req, res) {
+  var player_id = req.player_id;
   var game_id = req.game_id;
   var game = games[game_id];
-  res.json({actions: game.actions, response: 'ok'});
+  res.json({actions: (game.actions[player_id] || null), response: 'ok'});
 });
 
 var server = app.listen(3000, function () {
