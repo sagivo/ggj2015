@@ -42,7 +42,7 @@ app.get('/actions/:game_id', function(req, res){
   if (players[game.player1].actions && players[game.player2].actions)
     s = game.player1 + '|' + players[game.player1].actions + '|' + game.player2 + '|' + players[game.player2].actions;
   else s = 'wait';
-  res.send(s);
+  res.send(s); //player1 | actions1 | player2 | actions2
 });
 
 app.post('/lvlup/:game_id', function(req, res){
