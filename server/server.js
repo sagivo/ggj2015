@@ -54,6 +54,11 @@ app.post('/lvlup/:game_id', function(req, res){
   res.send('ok');
 });
 
+app.post('/clear', function(req, res){
+  games = {}; players = {}; line = []; game_index = 1; player_index = 1;
+  res.send(':(');
+});
+
 var server = app.listen((process.env.PORT || 8080), function () {
   var host = server.address().address
   var port = server.address().port

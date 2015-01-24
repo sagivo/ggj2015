@@ -7,7 +7,7 @@ public class Networking : MonoBehaviour {
 	public System.Action<string> OnGetComplete;
 	public System.Action<string> OnPostComplete;
 
-	string baseUrl = "http://0.0.0.0:8080";
+	string baseUrl = "http://0.0.0.0:8080"; //"https://young-brushlands-8741.herokuapp.com"
 
 	void Start(){}
 	
@@ -32,7 +32,7 @@ public class Networking : MonoBehaviour {
 			{
 				form.AddField(post_arg.Key, post_arg.Value);
 			}
-		else form.AddField("a","a");
+		else form.AddField("a","a"); //stam
 		WWW www = new WWW(baseUrl + url, form);
 		
 		StartCoroutine(WaitForRequest(www, true));
@@ -43,12 +43,10 @@ public class Networking : MonoBehaviour {
 	{
 		yield return www;
 		Debug.Log(www.url + ":" + www.text);
-
 		if (www.error == null)
 		{
 			if (OnGetComplete!=null && !post) OnGetComplete(www.text);
 			else if (OnPostComplete!=null && post) OnPostComplete(www.text);
-
 		} else {
 			Debug.Log("WWW Error for "+www.url+": "+ www.error);
 		}    
