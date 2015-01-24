@@ -66,7 +66,7 @@ app.post('/games/:game_id/actions/:player_id', function(req, res) {
   if(game.actions[player_id]) {
     res.send('oops! repeat');
   } else {
-    game.actions[player_id] = req.body.actions;
+    game.actions[player_id] = req.body;
     res.send('ok');
   }
 });
