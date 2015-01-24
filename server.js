@@ -20,6 +20,10 @@ app.param('player_id', function (req, res, next, player_id) {
   next();
 })
 
+app.get('/', function(req, res) {
+  res.send('hello world');
+});
+
 app.post('/lfg/:player_id', function (req, res) {
   var player_id = req.player_id;
   var game_id = null;
@@ -39,7 +43,7 @@ app.post('/lfg/:player_id', function (req, res) {
     player_id_to_game_id[player_id] = null;
   }
   console.log([games, unmatched_players, player_id_to_game_id]);
-  res.json({game_id: game_id});
+  res.send(game_id || 'wait');
 });
 
 app.post('/games/:game_id/sync/:player_id', function(req, res) {
@@ -49,9 +53,9 @@ app.post('/games/:game_id/sync/:player_id', function(req, res) {
   game.actions[player_id] = null;
   delete game.actions[player_id];
   if(Object.keys(game.actions).length == 0) {
-    res.json({response: 'ok'});
+    res.send('ok');
   } else {
-    res.json({response: 'wait'});
+    res.send('wait');
   }
 });
 
@@ -60,10 +64,10 @@ app.post('/games/:game_id/actions/:player_id', function(req, res) {
   var game_id = req.game_id;
   var game = games[game_id];
   if(game.actions[player_id]) {
-    res.json({response: 'oops! repeat'});
+    res.send('oops! repeat');
   } else {
     game.actions[player_id] = req.body.actions;
-    res.json({response: 'ok'});
+    res.send('ok');
   }
 });
 
@@ -71,7 +75,7 @@ app.get('/games/:game_id/actions/:player_id', function(req, res) {
   var player_id = req.player_id;
   var game_id = req.game_id;
   var game = games[game_id];
-  res.json({actions: (game.actions[player_id] || null), response: 'ok'});
+  res.send(game.actions[player_id] || 'wait');
 });
 
 var server = app.listen(3000, function () {
