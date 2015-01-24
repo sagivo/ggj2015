@@ -19,9 +19,9 @@ public class Networking : MonoBehaviour {
 		return www; 
 	}
 
-	public WWW POST(string url, string data){
+	public WWW POST(string url, string key, string val){
 		Dictionary<string,string> p = new Dictionary<string, string>();
-		p["data"] = data;
+		p[key] = val;
 		return POST(url, p);
 	}
 	
@@ -32,7 +32,7 @@ public class Networking : MonoBehaviour {
 		{
 			form.AddField(post_arg.Key, post_arg.Value);
 		}
-		WWW www = new WWW(url, form);
+		WWW www = new WWW(baseUrl + url, form);
 		
 		StartCoroutine(WaitForRequest(www, true));
 		return www; 

@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic; 
 
 public class Player : MonoBehaviour {
+	public GameObject player2;
+	Vector3 startPos;
+	int id;
+	int gameId; 
 	float speed = 20;
 	Vector3 v;
 	Networking n;
@@ -10,34 +14,45 @@ public class Player : MonoBehaviour {
 	List<string> records;
 	int recordIndex = 0;
 	float startReplay;
+	enum gameModeType {waitingForPlaers};
+	gameModeType gameMode;
 
 	void Start () {
+		gameMode = gameModeType.waitingForPlaers;
+		startPos = transform.position;
 		records = new List<string>();
 		n = GetComponent<Networking>();
 		n.OnGetComplete += (d) => {
-			Debug.Log(d);
+			Debug.Log("GET:" + d);
+			if (gameMode == gameModeType.waitingForPlaers){
+
+			}
+		};
+		n.OnPostComplete += (d) => {
+			Debug.Log("POST:" + d);
 		};
 	}
 	
 	void Update() {
 		if (record) {
-			v = Vector3.zero;
+			v = startPos;
 			if (Input.GetKeyDown(KeyCode.DownArrow)) { v = -Vector2.up; records.Add(Time.time.ToString() + ":" + "d"); }
 			else if (Input.GetKeyDown(KeyCode.UpArrow)) { v = Vector2.up; records.Add(Time.time.ToString() + ":" + "u"); }
 			else if (Input.GetKeyDown(KeyCode.RightArrow)) { v = Vector2.right; records.Add(Time.time.ToString() + ":" + "r"); }
 			else if (Input.GetKeyDown(KeyCode.LeftArrow)) { v = -Vector2.right; records.Add(Time.time.ToString() + ":" + "l"); }
 			if (v!=Vector3.zero) {
-				//var a = n.GET("/");
-				transform.position += v * speed * Time.deltaTime;
+				transform.Translate(v * speed * Time.deltaTime);
+				//transform.position += v * speed * Time.deltaTime;
 
 			}
-			if (v == Vector3.up) {
-				var s = getRecords();
-				Debug.Log(s);
+			if (Input.GetKeyDown(KeyCode.Space)) {
+				string s = getRecords();
+				//n.POST("/games/322118074/actions/1", "actions", s);
+				n.GET("/games/322118074/actions");
 				records = setRecords(s);
-				Debug.Log(record);
 				record = false;
 			}
+
 		} else { //replay
 			if (startReplay==0) {
 				startReplay = Time.time;
@@ -50,7 +65,7 @@ public class Player : MonoBehaviour {
 				else if (direction == "d") v = Vector3.down;
 				else if (direction == "l") v = Vector3.left;
 				else if (direction == "r") v = Vector3.right;
-				transform.position += v * speed * Time.deltaTime;
+				transform.Translate(v * speed * Time.deltaTime);
 				recordIndex++;
 			}
 		}
