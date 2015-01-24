@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cca451f1b84034446b97bb5661c69227, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player2: {fileID: 1780179407}
+  player2Prefub: {fileID: 1780179407}
 --- !u!212 &142951100
 SpriteRenderer:
   m_ObjectHideFlags: 0
