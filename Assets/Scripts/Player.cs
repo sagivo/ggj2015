@@ -15,16 +15,15 @@ public class Player : MonoBehaviour {
 	List<string> records;
 	int recordIndex = 0;
 	float startReplay;
-	enum gameModeType {waitingForPlaers, Sync, Record, waitingForActions, Replay};
+	enum gameModeType {init, waitingForPartner, Record, waitingForPartnerActions, Replay};
 	gameModeType gameMode;
 
 	void Start () {
 		id = Random.Range(0,int.MaxValue).ToString();
-		gameMode = gameModeType.waitingForPlaers;
+		gameMode = gameModeType.init;
 		startPos = transform.position;
 		records = new List<string>();
 		n = GetComponent<Networking>();
-		InvokeRepeating("checkForPlayers",0,2);
 
 		n.OnGetComplete += (d) => {
 			handleResponse(d);
@@ -50,7 +49,7 @@ public class Player : MonoBehaviour {
 				string actions = getRecords();
 				n.POST("/games/"+gameId+"/actions/"+id, "actions", actions);
 				InvokeRepeating("checkForActions",2,2);
-				gameMode = gameModeType.waitingForActions;
+				gameMode = gameModeType.waitingForPartnerActions;
 			}
 
 		} else if (gameMode == gameModeType.Replay) { //replay
@@ -76,39 +75,41 @@ public class Player : MonoBehaviour {
 	}
 
 	void checkForPlayers(){
-		n.POST("/lfg/" + id, null);
+		n.GET("/check/" + id);
 	}
 
-	void checkForActions(){
-		n.GET("/games/"+gameId+"/actions");
+	void checkForPlayerActions(){
+		n.GET("/actions/" + gameId);
 	}
 
 	void handleResponse(string d){
 		Debug.Log(gameMode);
 		switch (gameMode) {
-		case gameModeType.waitingForPlaers:
+		case gameModeType.init:
+			if (d!="ok") {
+				gameMode = gameModeType.waitingForPartner;
+				InvokeRepeating("checkForPlayers",0,2);
+			}		
+			break;
+		case gameModeType.waitingForPartner:
 			if (d!="wait"){
 				CancelInvoke("checkForPlayers");
 				gameId = d;
-				gameMode = gameModeType.Sync;
-				n.POST ("/games/"+gameId+"/sync/"+id, null);
-			}
-			break;
-		case gameModeType.Sync:
-			if (d!="wait"){
-				//player2Id = d;
 				gameMode = gameModeType.Record;
 			}
 			break;
-		case gameModeType.waitingForActions:
+		case gameModeType.waitingForPartnerActions:
 			if (d!="wait"){
+				CancelInvoke("checkForPlayerActions");
+				gameId = d;
+				gameMode = gameModeType.Replay;
 				var data = d.Split('|');
 				setRecords( (data[0] == id) ? data[1] : data[3] );
 				gameMode = gameModeType.Replay;
 				startReplay = Time.time;
 				transform.position = Vector3.zero;
 			}
-			break;
+			break;		
 		default: break;
 		}
 	}
