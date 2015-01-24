@@ -4,28 +4,55 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
 	public GameObject player2;
+	//string player2Id;
+	List<string> player2Records;
 	Vector3 startPos;
-	int id;
-	int gameId; 
+	string id;
+	string gameId; 
 	float speed = 20;
 	Vector3 v;
 	Networking n;
-	bool record = true; 
 	List<string> records;
 	int recordIndex = 0;
 	float startReplay;
-	enum gameModeType {waitingForPlaers};
+	enum gameModeType {waitingForPlaers, Sync, Record, waitingForActions, Replay};
 	gameModeType gameMode;
 
 	void Start () {
+		id = Random.Range(0,int.MaxValue).ToString();
 		gameMode = gameModeType.waitingForPlaers;
 		startPos = transform.position;
 		records = new List<string>();
 		n = GetComponent<Networking>();
+		InvokeRepeating("checkForPlayers",0,2);
+
 		n.OnGetComplete += (d) => {
 			Debug.Log("GET:" + d);
-			if (gameMode == gameModeType.waitingForPlaers){
-
+			switch (gameMode) {
+			case gameModeType.waitingForPlaers:
+				if (d!="wait"){
+					CancelInvoke("checkForPlayers");
+					gameId = d;
+					gameMode = gameModeType.Sync;
+					n.POST ("/games/"+gameId+"/sync/"+id, null);
+				}
+				break;
+			case gameModeType.Sync:
+				if (d!="wait"){
+					//player2Id = d;
+					gameMode = gameModeType.Record;
+				}
+				break;
+			case gameModeType.waitingForActions:
+				if (d!="wait"){
+					var data = d.Split('|');
+					setRecords( (data[0] == id) ? data[1] : data[3] );
+					gameMode = gameModeType.Replay;
+					startReplay = Time.time;
+					transform.position = Vector3.zero;
+				}
+				break;
+			default: break;
 			}
 		};
 		n.OnPostComplete += (d) => {
@@ -34,7 +61,7 @@ public class Player : MonoBehaviour {
 	}
 	
 	void Update() {
-		if (record) {
+		if (gameMode == gameModeType.Record) {
 			v = startPos;
 			if (Input.GetKeyDown(KeyCode.DownArrow)) { v = -Vector2.up; records.Add(Time.time.ToString() + ":" + "d"); }
 			else if (Input.GetKeyDown(KeyCode.UpArrow)) { v = Vector2.up; records.Add(Time.time.ToString() + ":" + "u"); }
@@ -46,18 +73,13 @@ public class Player : MonoBehaviour {
 
 			}
 			if (Input.GetKeyDown(KeyCode.Space)) {
-				string s = getRecords();
-				//n.POST("/games/322118074/actions/1", "actions", s);
-				n.GET("/games/322118074/actions");
-				records = setRecords(s);
-				record = false;
+				string actions = getRecords();
+				n.POST("/games/"+gameId+"/actions/"+id, "actions", actions);
+				InvokeRepeating("checkForActions",2,2);
+				gameMode = gameModeType.waitingForActions;
 			}
 
-		} else { //replay
-			if (startReplay==0) {
-				startReplay = Time.time;
-				transform.position = Vector3.zero;
-			}
+		} else if (gameMode == gameModeType.Replay) { //replay
 			if (recordIndex < records.Count && float.Parse(records[recordIndex].Split(':')[0]) + startReplay <= Time.time ){
 				Vector3 v = new Vector3();
 				string direction = records[recordIndex].Split(':')[1];
@@ -75,7 +97,15 @@ public class Player : MonoBehaviour {
 		return string.Join(",",  records.ToArray());
 	}
 
-	List<string> setRecords(string s){
-		return new List<string>(s.Split(','));
+	void setRecords(string s){
+		records = new List<string>(s.Split(','));
+	}
+
+	void checkForPlayers(){
+		n.GET("/lfg/" + id);
+	}
+
+	void checkForActions(){
+		n.GET("/games/"+gameId+"/actions");
 	}
 }

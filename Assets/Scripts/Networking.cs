@@ -28,10 +28,11 @@ public class Networking : MonoBehaviour {
 	public WWW POST(string url, Dictionary<string,string> post)
 	{
 		WWWForm form = new WWWForm();
-		foreach(KeyValuePair<string,string> post_arg in post)
-		{
-			form.AddField(post_arg.Key, post_arg.Value);
-		}
+		if (post!=null)
+			foreach(KeyValuePair<string,string> post_arg in post)
+			{
+				form.AddField(post_arg.Key, post_arg.Value);
+			}
 		WWW www = new WWW(baseUrl + url, form);
 		
 		StartCoroutine(WaitForRequest(www, true));
