@@ -43,7 +43,7 @@ public class Player : MonoBehaviour {
 				startReplay = Time.time;
 				transform.position = Vector3.zero;
 			}
-			if (recordIndex < records.Count && float.Parse(records[recordIndex].Split(':')[0]) + startReplay >= Time.time ){
+			if (recordIndex < records.Count && float.Parse(records[recordIndex].Split(':')[0]) + startReplay <= Time.time ){
 				Vector3 v = new Vector3();
 				string direction = records[recordIndex].Split(':')[1];
 				if (direction == "u") v = Vector3.up;
@@ -57,12 +57,7 @@ public class Player : MonoBehaviour {
 	}
 
 	string getRecords(){
-		string s = "";
-		foreach (var v in records) {
-			s+= v;
-		}
-		//if (s.Length>1) s = s.Substring(0,s.Length-2);
-		return s;
+		return string.Join(",",  records.ToArray());
 	}
 
 	List<string> setRecords(string s){
