@@ -56,20 +56,20 @@ public class Player : MonoBehaviour {
 		} else if (gameMode == gameModeType.Replay) { //replay
 			if (recordIndex1 < records.Count && float.Parse(records[recordIndex1].Split(':')[0]) + startReplayTime <= Time.time ){
 				var v = vectorForKey(records[recordIndex1].Split(':')[1]);
-				transform.Translate(v * speed * Time.deltaTime);
+				if (v!=Vector3.zero) transform.Translate(v * speed * Time.deltaTime);
 				recordIndex1++;
 			}
 			//move player2 
 			if (recordIndex2 < player2Records.Count && float.Parse(player2Records[recordIndex2].Split(':')[0]) + startReplayTime <= Time.time ){
 				var v = vectorForKey(player2Records[recordIndex2].Split(':')[1]);
-				player2.transform.Translate(v * speed * Time.deltaTime);
+				if (v!=Vector3.zero) player2.transform.Translate(v * speed * Time.deltaTime);
 				recordIndex2++;
 			}
 		}
 	}
 
 	Vector3 vectorForKey(string direction){
-		Vector3 v = new Vector3();
+		Vector3 v = Vector3.zero;
 		if (direction == "u") v = Vector3.up;
 		else if (direction == "d") v = Vector3.down;
 		else if (direction == "l") v = Vector3.left;
