@@ -15,16 +15,18 @@ public class Player : MonoBehaviour {
 	List<string> records;
 	int recordIndex1 = 0;
 	int recordIndex2 = 0;
-	float startReplay;
+	float startReplayTime;
+	float startRecordTime;
 	enum gameModeType {init, waitingForPartner, Record, PostingActions, waitingForPartnerActions, Replay};
 	gameModeType gameMode;
 
 	void Start () {
-		playerId = Random.Range(0,int.MaxValue).ToString();
-		gameMode = gameModeType.init;
 		startPos = transform.position;
 		records = new List<string>();
+		gameMode = gameModeType.init;
+
 		n = GetComponent<Networking>();
+		n.POST("/init",null);
 
 		n.OnGetComplete += (d) => {
 			handleResponse(d);
@@ -36,29 +38,29 @@ public class Player : MonoBehaviour {
 	
 	void Update() {
 		if (gameMode == gameModeType.Record) {
-			v = startPos;
-			if (Input.GetKeyDown(KeyCode.DownArrow)) { v = -Vector2.up; records.Add(Time.time.ToString() + ":" + "d"); }
-			else if (Input.GetKeyDown(KeyCode.UpArrow)) { v = Vector2.up; records.Add(Time.time.ToString() + ":" + "u"); }
-			else if (Input.GetKeyDown(KeyCode.RightArrow)) { v = Vector2.right; records.Add(Time.time.ToString() + ":" + "r"); }
-			else if (Input.GetKeyDown(KeyCode.LeftArrow)) { v = -Vector2.right; records.Add(Time.time.ToString() + ":" + "l"); }
+			v = Vector3.zero;
+			if (Input.GetKeyDown(KeyCode.DownArrow)) { v = -Vector2.up; records.Add((Time.time - startRecordTime ).ToString() + ":" + "d"); }
+			else if (Input.GetKeyDown(KeyCode.UpArrow)) { v = Vector2.up; records.Add((Time.time - startRecordTime ).ToString() + ":" + "u"); }
+			else if (Input.GetKeyDown(KeyCode.RightArrow)) { v = Vector2.right; records.Add((Time.time - startRecordTime ).ToString() + ":" + "r"); }
+			else if (Input.GetKeyDown(KeyCode.LeftArrow)) { v = -Vector2.right; records.Add((Time.time - startRecordTime ).ToString() + ":" + "l"); }
 			if (v!=Vector3.zero) {
 				transform.Translate(v * speed * Time.deltaTime);
 				//transform.position += v * speed * Time.deltaTime;
 			}
 			if (Input.GetKeyDown(KeyCode.Space)) {
 				string actions = getRecords();
-				n.POST("/actions/"+gameId, "actions", actions);
+				n.POST("/actions/"+playerId, "actions", actions);
 				gameMode = gameModeType.PostingActions;
 			}
 
 		} else if (gameMode == gameModeType.Replay) { //replay
-			if (recordIndex1 < records.Count && float.Parse(records[recordIndex1].Split(':')[0]) + startReplay <= Time.time ){
+			if (recordIndex1 < records.Count && float.Parse(records[recordIndex1].Split(':')[0]) + startReplayTime <= Time.time ){
 				var v = vectorForKey(records[recordIndex1].Split(':')[1]);
 				transform.Translate(v * speed * Time.deltaTime);
 				recordIndex1++;
 			}
 			//move player2 
-			if (recordIndex2 < player2Records.Count && float.Parse(player2Records[recordIndex2].Split(':')[0]) + startReplay <= Time.time ){
+			if (recordIndex2 < player2Records.Count && float.Parse(player2Records[recordIndex2].Split(':')[0]) + startReplayTime <= Time.time ){
 				var v = vectorForKey(player2Records[recordIndex2].Split(':')[1]);
 				player2.transform.Translate(v * speed * Time.deltaTime);
 				recordIndex2++;
@@ -92,25 +94,26 @@ public class Player : MonoBehaviour {
 	}
 
 	void handleResponse(string d){
-		Debug.Log(gameMode);
 		switch (gameMode) {
 		case gameModeType.init:
-			if (d!="ok") {
-				gameMode = gameModeType.waitingForPartner;
-				InvokeRepeating("checkForPlayers",0,2);
-			}		
+			playerId = d;
+			gameMode = gameModeType.waitingForPartner;
+			InvokeRepeating("checkForPlayers",0,2);
 			break;
 		case gameModeType.waitingForPartner:
 			if (d!="wait"){
 				CancelInvoke("checkForPlayers");
 				gameId = d;
+				startRecordTime = Time.time;
 				gameMode = gameModeType.Record;
+
 			}
 			break;
 		case gameModeType.PostingActions:
 			if (d == "ok"){
 				InvokeRepeating("checkForPlayerActions",0,2);
 				gameMode = gameModeType.waitingForPartnerActions;
+				transform.position = startPos;
 			}
 			break;
 		case gameModeType.waitingForPartnerActions:
@@ -121,11 +124,12 @@ public class Player : MonoBehaviour {
 				records = recordsFromString( (data[0] == playerId) ? data[1] : data[3] );
 				player2Records = recordsFromString( (data[0] != playerId) ? data[1] : data[3] );
 				gameMode = gameModeType.Replay;
-				startReplay = Time.time;
+				startReplayTime = Time.time;
 				transform.position = Vector3.zero;
 			}
 			break;		
 		default: break;
 		}
+		Debug.Log(gameMode);
 	}
 }
