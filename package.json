@@ -2,9 +2,9 @@
   "name": "ggj2015-game-server",
   "version": "0.1.2",
   "description": "GGJ2015 game server",
-  "main": "server.js",
+  "main": "server/server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server/server.js"
   },
   "dependencies": {
     "body-parser": "^1.10.2",
