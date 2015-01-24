@@ -28,7 +28,10 @@ app.post('/init', function(req, res){
 });
 
 app.get('/check/:player_id', function(req, res){
-  if (players[req.params.player_id].game_id) res.send(players[req.params.player_id].game_id.toString());  // game_id
+  if (players[req.params.player_id].game_id) {
+    game = games[players[req.params.player_id].game_id];
+    res.send(game.game_id + '|' + game.player1 + '|' + games.player2 + '|' + game.lvl);  // game_id | player1 | player2 | lvl
+  }
   else res.send('wait');
 });
 
