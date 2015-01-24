@@ -27,36 +27,10 @@ public class Player : MonoBehaviour {
 		InvokeRepeating("checkForPlayers",0,2);
 
 		n.OnGetComplete += (d) => {
-			Debug.Log("GET:" + d);
-			switch (gameMode) {
-			case gameModeType.waitingForPlaers:
-				if (d!="wait"){
-					CancelInvoke("checkForPlayers");
-					gameId = d;
-					gameMode = gameModeType.Sync;
-					n.POST ("/games/"+gameId+"/sync/"+id, null);
-				}
-				break;
-			case gameModeType.Sync:
-				if (d!="wait"){
-					//player2Id = d;
-					gameMode = gameModeType.Record;
-				}
-				break;
-			case gameModeType.waitingForActions:
-				if (d!="wait"){
-					var data = d.Split('|');
-					setRecords( (data[0] == id) ? data[1] : data[3] );
-					gameMode = gameModeType.Replay;
-					startReplay = Time.time;
-					transform.position = Vector3.zero;
-				}
-				break;
-			default: break;
-			}
+			handleResponse(d);
 		};
 		n.OnPostComplete += (d) => {
-			Debug.Log("POST:" + d);
+			handleResponse(d);
 		};
 	}
 	
@@ -102,10 +76,40 @@ public class Player : MonoBehaviour {
 	}
 
 	void checkForPlayers(){
-		n.GET("/lfg/" + id);
+		n.POST("/lfg/" + id, null);
 	}
 
 	void checkForActions(){
 		n.GET("/games/"+gameId+"/actions");
+	}
+
+	void handleResponse(string d){
+		Debug.Log(gameMode);
+		switch (gameMode) {
+		case gameModeType.waitingForPlaers:
+			if (d!="wait"){
+				CancelInvoke("checkForPlayers");
+				gameId = d;
+				gameMode = gameModeType.Sync;
+				n.POST ("/games/"+gameId+"/sync/"+id, null);
+			}
+			break;
+		case gameModeType.Sync:
+			if (d!="wait"){
+				//player2Id = d;
+				gameMode = gameModeType.Record;
+			}
+			break;
+		case gameModeType.waitingForActions:
+			if (d!="wait"){
+				var data = d.Split('|');
+				setRecords( (data[0] == id) ? data[1] : data[3] );
+				gameMode = gameModeType.Replay;
+				startReplay = Time.time;
+				transform.position = Vector3.zero;
+			}
+			break;
+		default: break;
+		}
 	}
 }

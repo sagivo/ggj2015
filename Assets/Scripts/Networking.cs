@@ -7,13 +7,12 @@ public class Networking : MonoBehaviour {
 	public System.Action<string> OnGetComplete;
 	public System.Action<string> OnPostComplete;
 
-	string baseUrl = "http://floating-basin-3676.herokuapp.com";
+	string baseUrl = "http://0.0.0.0:8080";
 
 	void Start(){}
 	
 	public WWW GET(string url)
-	{
-		
+	{		
 		WWW www = new WWW (baseUrl + url);
 		StartCoroutine (WaitForRequest (www, false));
 		return www; 
@@ -33,6 +32,7 @@ public class Networking : MonoBehaviour {
 			{
 				form.AddField(post_arg.Key, post_arg.Value);
 			}
+		else form.AddField("a","a");
 		WWW www = new WWW(baseUrl + url, form);
 		
 		StartCoroutine(WaitForRequest(www, true));
@@ -42,15 +42,15 @@ public class Networking : MonoBehaviour {
 	private IEnumerator WaitForRequest(WWW www, bool post)
 	{
 		yield return www;
-		
-		// check for errors
+		Debug.Log(www.url + ":" + www.text);
+
 		if (www.error == null)
 		{
 			if (OnGetComplete!=null && !post) OnGetComplete(www.text);
 			else if (OnPostComplete!=null && post) OnPostComplete(www.text);
 
 		} else {
-			Debug.Log("WWW Error: "+ www.error);
+			Debug.Log("WWW Error for "+www.url+": "+ www.error);
 		}    
 	}
 }
