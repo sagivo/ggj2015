@@ -125,7 +125,6 @@ public class Player : MonoBehaviour {
 				player2Records = recordsFromString( (data[0] != playerId) ? data[1] : data[3] );
 				gameMode = gameModeType.Replay;
 				startReplayTime = Time.time;
-				transform.position = Vector3.zero;
 			}
 			break;		
 		default: break;
