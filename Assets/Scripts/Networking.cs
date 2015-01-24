@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic; 
 
+
 public class Networking : MonoBehaviour {
 
 	public System.Action<string> OnGetComplete;

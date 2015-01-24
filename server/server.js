@@ -49,11 +49,11 @@ app.get('/actions/:game_id', function(req, res){
   res.send(s); //player1 | actions1 | player2 | actions2
 });
 
-app.post('/lvlup/:game_id', function(req, res){
+app.post('/next/:game_id', function(req, res){
   var game = games[req.params.game_id];
   if (players[game.player1].actions){
     players[game.player1].actions = null; players[game.player2].actions = null;
-    game.lvl++;
+    if (req.body.lvlup == '1') game.lvl++;
   }
   res.send('ok');
 });

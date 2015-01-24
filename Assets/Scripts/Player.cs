@@ -1,12 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic; 
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
 	public GameObject player2Prefub;
+	public Text text;
+	int lvl = 1;
+	int[] lvlTime = new int[]{0,5,7,15,17};
 	//string player2Id;
 	List<string> player2Records;
-	Vector3 startPos;
+	Vector3 startPos1;
+	Vector3 startPos2;
 	string playerId;
 	string gameId; 
 	float speed = 20;
@@ -49,9 +54,7 @@ public class Player : MonoBehaviour {
 				//transform.position += v * speed * Time.deltaTime;
 			}
 			if (Input.GetKeyDown(KeyCode.Space)) {
-				string actions = getRecords();
-				n.POST("/actions/"+playerId, "actions", actions);
-				gameMode = gameModeType.PostingActions;
+				//finishLvl();
 			}
 
 		} else if (gameMode == gameModeType.Replay) { //replay
@@ -90,8 +93,31 @@ public class Player : MonoBehaviour {
 		n.GET("/check/" + playerId);
 	}
 
+	void updateCounter(){
+		int time = int.Parse(text.text);
+		if (time <= 0) { CancelInvoke("updateCounter"); finishLvl(); }
+		else text.text = (time-1).ToString();
+	}
+
 	void checkForPlayerActions(){
 		n.GET("/actions/" + gameId);
+	}
+
+	void finishLvl(){
+		string actions = getRecords();
+		n.POST("/actions/"+playerId, "actions", actions);
+		gameMode = gameModeType.PostingActions;
+		text.text = "Waiting for player2";
+		//lvl++;
+	}
+
+	void startRecording(){
+		player1.transform.position = startPos1;
+		player2.transform.position = startPos2;
+		startRecordTime = Time.time;
+		text.text = lvlTime[lvl].ToString();
+		InvokeRepeating("updateCounter", 1 ,1);
+		gameMode = gameModeType.Record;
 	}
 
 	void handleResponse(string d){
@@ -109,17 +135,16 @@ public class Player : MonoBehaviour {
 				Debug.Log("gameId" + gameId);
 				player1 = (data[1] == playerId) ? gameObject : player2Prefub;
 				player2 = (data[1] != playerId) ? gameObject : player2Prefub;
-				startPos = player1.transform.position;
-				startRecordTime = Time.time;
-				gameMode = gameModeType.Record;
-
+				startPos1 = player1.transform.position;
+				startPos2 = player2.transform.position;
+				startRecording();
 			}
 			break;
 		case gameModeType.PostingActions:
 			if (d == "ok"){
 				InvokeRepeating("checkForPlayerActions",0,2);
 				gameMode = gameModeType.waitingForPartnerActions;
-				player1.transform.position = startPos;
+				player1.transform.position = startPos1;
 			}
 			break;
 		case gameModeType.waitingForPartnerActions:
@@ -129,8 +154,12 @@ public class Player : MonoBehaviour {
 				var data = d.Split('|');
 				records = recordsFromString( (data[0] == playerId) ? data[1] : data[3] );
 				player2Records = recordsFromString( (data[0] != playerId) ? data[1] : data[3] );
+				player1.GetComponent<SpriteRenderer>().color = Color.blue;
+				player2.GetComponent<SpriteRenderer>().color = Color.red;
 				gameMode = gameModeType.Replay;
 				startReplayTime = Time.time;
+				text.text = "Replay";
+				Invoke("startRecording", lvlTime[lvl]+ 2);
 			}
 			break;		
 		default: break;
