@@ -1,9 +1,9 @@
 
 var express = require('express')
-//var bodyParser = require('body-parser');
+var bodyParser = require('body-parser');
 var app = express()
 //app.use(bodyParser.json());
-//app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 var games = {};
 
@@ -50,10 +50,17 @@ app.post('/games/:game_id/sync/:player_id', function(req, res) {
   var player_id = req.player_id;
   var game_id = req.game_id;
   var game = games[game_id];
+  var i;
   game.actions[player_id] = null;
   delete game.actions[player_id];
   if(Object.keys(game.actions).length == 0) {
-    res.send('ok');
+    s = '';
+    for(i = 0; i < game.players.length; i++) {
+      if(game.players[i] != player_id) {
+        s = game.players[i];
+      }
+    }
+    res.send(s);
   } else {
     res.send('wait');
   }
@@ -66,6 +73,7 @@ app.post('/games/:game_id/actions/:player_id', function(req, res) {
   if(game.actions[player_id]) {
     res.send('oops! repeat');
   } else {
+    console.log(req.body);
     game.actions[player_id] = req.body;
     res.send('ok');
   }
