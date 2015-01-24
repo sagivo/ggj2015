@@ -7,7 +7,7 @@ public class Networking : MonoBehaviour {
 	public System.Action<string> OnGetComplete;
 	public System.Action<string> OnPostComplete;
 
-	string baseUrl = "http://www.google.com";
+	string baseUrl = "http://floating-basin-3676.herokuapp.com";
 
 	void Start(){}
 	
@@ -15,8 +15,14 @@ public class Networking : MonoBehaviour {
 	{
 		
 		WWW www = new WWW (baseUrl + url);
-		StartCoroutine (WaitForRequest (www));
+		StartCoroutine (WaitForRequest (www, false));
 		return www; 
+	}
+
+	public WWW POST(string url, string data){
+		Dictionary<string,string> p = new Dictionary<string, string>();
+		p["data"] = data;
+		return POST(url, p);
 	}
 	
 	public WWW POST(string url, Dictionary<string,string> post)
@@ -28,18 +34,19 @@ public class Networking : MonoBehaviour {
 		}
 		WWW www = new WWW(url, form);
 		
-		StartCoroutine(WaitForRequest(www));
+		StartCoroutine(WaitForRequest(www, true));
 		return www; 
 	}
 	
-	private IEnumerator WaitForRequest(WWW www)
+	private IEnumerator WaitForRequest(WWW www, bool post)
 	{
 		yield return www;
 		
 		// check for errors
 		if (www.error == null)
 		{
-			if (OnGetComplete!=null) OnGetComplete(www.text);
+			if (OnGetComplete!=null && !post) OnGetComplete(www.text);
+			else if (OnPostComplete!=null && post) OnPostComplete(www.text);
 
 		} else {
 			Debug.Log("WWW Error: "+ www.error);
