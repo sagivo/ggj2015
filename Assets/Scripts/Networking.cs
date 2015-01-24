@@ -7,7 +7,8 @@ public class Networking : MonoBehaviour {
 	public System.Action<string> OnGetComplete;
 	public System.Action<string> OnPostComplete;
 
-	string baseUrl = "http://0.0.0.0:8080"; //"https://young-brushlands-8741.herokuapp.com"
+	string baseUrl = "https://young-brushlands-8741.herokuapp.com";
+	//string baseUrl = "http://0.0.0.0:8080";
 
 	void Start(){}
 	
