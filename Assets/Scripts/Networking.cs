@@ -7,8 +7,8 @@ public class Networking : MonoBehaviour {
 	public System.Action<string> OnGetComplete;
 	public System.Action<string> OnPostComplete;
 
-	string baseUrl = "https://young-brushlands-8741.herokuapp.com";
-	//string baseUrl = "http://0.0.0.0:8080";
+	//string baseUrl = "https://young-brushlands-8741.herokuapp.com";
+	string baseUrl = "http://0.0.0.0:8080";
 
 	void Start(){}
 	
@@ -43,7 +43,7 @@ public class Networking : MonoBehaviour {
 	private IEnumerator WaitForRequest(WWW www, bool post)
 	{
 		yield return www;
-		Debug.Log(www.url + ":" + www.text);
+		Debug.Log(((post) ? "POST " : "GET ") +  www.url + ":" + www.text);
 		if (www.error == null)
 		{
 			if (OnGetComplete!=null && !post) OnGetComplete(www.text);
