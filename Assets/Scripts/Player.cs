@@ -8,7 +8,8 @@ public class Player : MonoBehaviour {
 	Networking n;
 	bool record = true; 
 	List<string> records;
-	int recordIndex;
+	int recordIndex = 0;
+	float startReplay;
 
 	void Start () {
 		records = new List<string>();
@@ -38,8 +39,20 @@ public class Player : MonoBehaviour {
 				record = false;
 			}
 		} else { //replay
-			if (recordIndex < records.Count )
-				//var a = records.IndexOf(
+			if (startReplay==0) {
+				startReplay = Time.time;
+				transform.position = Vector3.zero;
+			}
+			if (recordIndex < records.Count && float.Parse(records[recordIndex].Split(':')[0]) + startReplay >= Time.time ){
+				Vector3 v = new Vector3();
+				string direction = records[recordIndex].Split(':')[1];
+				if (direction == "u") v = Vector3.up;
+				else if (direction == "d") v = Vector3.down;
+				else if (direction == "l") v = Vector3.left;
+				else if (direction == "r") v = Vector3.right;
+				transform.position += v * speed * Time.deltaTime;
+				recordIndex++;
+			}
 		}
 	}
 
