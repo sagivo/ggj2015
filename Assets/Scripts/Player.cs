@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic; 
 
 public class Player : MonoBehaviour {
-	public GameObject player2;
+	public GameObject player2Prefub;
 	//string player2Id;
 	List<string> player2Records;
 	Vector3 startPos;
@@ -19,9 +19,10 @@ public class Player : MonoBehaviour {
 	float startRecordTime;
 	enum gameModeType {init, waitingForPartner, Record, PostingActions, waitingForPartnerActions, Replay};
 	gameModeType gameMode;
+	GameObject player1;
+	GameObject player2;
 
 	void Start () {
-		startPos = transform.position;
 		records = new List<string>();
 		gameMode = gameModeType.init;
 
@@ -44,7 +45,7 @@ public class Player : MonoBehaviour {
 			else if (Input.GetKeyDown(KeyCode.RightArrow)) { v = Vector2.right; records.Add((Time.time - startRecordTime ).ToString() + ":" + "r"); }
 			else if (Input.GetKeyDown(KeyCode.LeftArrow)) { v = -Vector2.right; records.Add((Time.time - startRecordTime ).ToString() + ":" + "l"); }
 			if (v!=Vector3.zero) {
-				transform.Translate(v * speed * Time.deltaTime);
+				player1.transform.Translate(v * speed * Time.deltaTime);
 				//transform.position += v * speed * Time.deltaTime;
 			}
 			if (Input.GetKeyDown(KeyCode.Space)) {
@@ -56,7 +57,7 @@ public class Player : MonoBehaviour {
 		} else if (gameMode == gameModeType.Replay) { //replay
 			if (recordIndex1 < records.Count && float.Parse(records[recordIndex1].Split(':')[0]) + startReplayTime <= Time.time ){
 				var v = vectorForKey(records[recordIndex1].Split(':')[1]);
-				if (v!=Vector3.zero) transform.Translate(v * speed * Time.deltaTime);
+				if (v!=Vector3.zero) player1.transform.Translate(v * speed * Time.deltaTime);
 				recordIndex1++;
 			}
 			//move player2 
@@ -102,8 +103,12 @@ public class Player : MonoBehaviour {
 			break;
 		case gameModeType.waitingForPartner:
 			if (d!="wait"){
+				var data = d.Split('|');
 				CancelInvoke("checkForPlayers");
-				gameId = d;
+				gameId = data[0];
+				player1 = (data[1] == playerId) ? gameObject : player2Prefub;
+				player2 = (data[1] != playerId) ? gameObject : player2Prefub;
+				startPos = player1.transform.position;
 				startRecordTime = Time.time;
 				gameMode = gameModeType.Record;
 
@@ -113,7 +118,7 @@ public class Player : MonoBehaviour {
 			if (d == "ok"){
 				InvokeRepeating("checkForPlayerActions",0,2);
 				gameMode = gameModeType.waitingForPartnerActions;
-				transform.position = startPos;
+				player1.transform.position = startPos;
 			}
 			break;
 		case gameModeType.waitingForPartnerActions:
