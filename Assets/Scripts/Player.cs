@@ -169,7 +169,7 @@ public class Player : MonoBehaviour {
 				text.text = "Replay";
 				recordTime = 0;
 				gameMode = gameModeType.Replay;
-				Invoke("startRecording", lvlTime[lvl]+5);
+				Invoke("startRecording", lvlTime[lvl]);
 			}
 			break;		
 		default: break;
