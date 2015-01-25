@@ -113,6 +113,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 193278, guid: 95336b65d61a4497d9548a1ebdcdbe9c, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 95336b65d61a4497d9548a1ebdcdbe9c, type: 2}
   m_RootGameObject: {fileID: 839481917}
@@ -343,7 +347,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &839481918
 Transform:
   m_ObjectHideFlags: 0
@@ -358,7 +362,7 @@ Transform:
   - {fileID: 873415223}
   - {fileID: 997159733}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
 --- !u!1 &873415222
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,6 +576,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a251d1f902ae9476e9f1cc136ddfe663, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player1: 0
 --- !u!114 &997159735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1026,7 +1031,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
 --- !u!1001 &1762635194
 Prefab:
   m_ObjectHideFlags: 0
