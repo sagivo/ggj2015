@@ -272,6 +272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player2Prefub: {fileID: 0}
+  text: {fileID: 0}
 --- !u!1 &1833752936
 GameObject:
   m_ObjectHideFlags: 0
