@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Test : MonoBehaviour {
-	float speed = 10;
+	float speed = 40;
 	Vector2 v;
 	// Use this for initialization
 	void Start () {
