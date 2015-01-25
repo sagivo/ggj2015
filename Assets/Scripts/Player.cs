@@ -112,7 +112,8 @@ public class Player : MonoBehaviour {
 	}
 
 	void startRecording(){
-		player1.transform.position = startPos1;
+		player1.transform.position = startPos1; 
+		//player1.transform.rotaton = 
 		player2.transform.position = startPos2;
 		startRecordTime = Time.time;
 		text.text = lvlTime[lvl].ToString();
