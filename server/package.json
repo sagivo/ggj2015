@@ -1,0 +1,16 @@
+{
+  "name": "ggj2015-game-server",
+  "version": "0.0.1",
+  "description": "GGJ2015 game server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*"
+  },
+  "engines": {
+    "node": "*"
+  }
+}
