@@ -27,4 +27,12 @@ public class Switch : MonoBehaviour {
 	void OnCollisionExit2D(Collision2D o) {
 		platerNear = false;
 	}
+
+	public void trigger(){
+		if (!platerNear) return;
+		t.toggle();
+		foreach (var l in lasers) {
+			l.toggle();
+		}
+	}
 }

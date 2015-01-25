@@ -25,8 +25,13 @@ public class Player : MonoBehaviour {
 	gameModeType gameMode;
 	GameObject player1;
 	GameObject player2;
+	Switch[] switches; 
 
 	void Start () {
+
+		switches = FindObjectsOfType(typeof(Switch)) as Switch[];
+
+
 		records = new List<string>();
 		gameMode = gameModeType.init;
 
@@ -49,6 +54,7 @@ public class Player : MonoBehaviour {
 			else if (Input.GetKeyDown(KeyCode.UpArrow)) { v = Vector2.up; records.Add(recordTime.ToString() + ":" + "u"); }
 			else if (Input.GetKeyDown(KeyCode.RightArrow)) { v = Vector2.right; records.Add(recordTime.ToString() + ":" + "r"); }
 			else if (Input.GetKeyDown(KeyCode.LeftArrow)) { v = -Vector2.right; records.Add(recordTime.ToString() + ":" + "l"); }
+			else if (Input.GetKeyDown(KeyCode.Space)) { records.Add(recordTime.ToString() + ":" + "s"); }
 			if (v!=Vector3.zero) {
 				//player1.transform.Translate(v * speed * Time.deltaTime);
 				player1.transform.rigidbody2D.velocity = v*speed;
@@ -82,6 +88,10 @@ public class Player : MonoBehaviour {
 		else if (direction == "d") v = Vector3.down;
 		else if (direction == "l") v = Vector3.left;
 		else if (direction == "r") v = Vector3.right;
+		else if (direction == "s")
+			foreach (var s in switches) {
+				s.trigger();
+			}
 		return v;
 	}
 
