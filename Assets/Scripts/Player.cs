@@ -15,7 +15,7 @@ public class Player : MonoBehaviour {
 	string playerId;
 	string gameId; 
 	float speed = 5;
-	Vector3 v;
+	Vector3 v, v1, v2;
 	Networking n;
 	List<string> records;
 	int recordIndex1 = 0;
@@ -30,7 +30,7 @@ public class Player : MonoBehaviour {
 	void Start () {
 		records = new List<string>();
 		gameMode = gameModeType.init;
-		v = Vector3.zero;
+		v = v1 = v2 = Vector3.zero;
 		n = GetComponent<Networking>();
 		n.POST("/init",null);
 
@@ -59,16 +59,18 @@ public class Player : MonoBehaviour {
 
 		} else if (gameMode == gameModeType.Replay) { //replay
 			if (recordIndex1 < records.Count && float.Parse(records[recordIndex1].Split(':')[0]) + startReplayTime <= Time.time ){
-				var v = vectorForKey(records[recordIndex1].Split(':')[1]);
-				if (v!=Vector3.zero) player1.transform.Translate(v * speed * Time.deltaTime);
+				v1 = vectorForKey(records[recordIndex1].Split(':')[1]);
+				//if (v!=Vector3.zero) 
+					
 				recordIndex1++;
-			}
+			}player1.transform.Translate(v1 * speed * Time.deltaTime);
 			//move player2 
 			if (recordIndex2 < player2Records.Count && float.Parse(player2Records[recordIndex2].Split(':')[0]) + startReplayTime <= Time.time ){
-				var v = vectorForKey(player2Records[recordIndex2].Split(':')[1]);
-				if (v!=Vector3.zero) player2.transform.Translate(v * speed * Time.deltaTime);
+				v2 = vectorForKey(player2Records[recordIndex2].Split(':')[1]);
+				//if (v!=Vector3.zero) 
+					
 				recordIndex2++;
-			}
+			}player2.transform.Translate(v2 * speed * Time.deltaTime);
 		}
 	}
 
