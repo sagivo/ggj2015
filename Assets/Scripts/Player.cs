@@ -14,14 +14,13 @@ public class Player : MonoBehaviour {
 	Vector3 startPos2;
 	string playerId;
 	string gameId; 
+	float recordTime = 0;
 	float speed = 10;
 	Vector3 v;
 	Networking n;
 	List<string> records;
 	int recordIndex1 = 0;
 	int recordIndex2 = 0;
-	float startReplayTime;
-	float startRecordTime;
 	enum gameModeType {init, waitingForPartner, Record, PostingActions, waitingForPartnerActions, Replay};
 	gameModeType gameMode;
 	GameObject player1;
@@ -45,10 +44,11 @@ public class Player : MonoBehaviour {
 	void Update() {
 		if (gameMode == gameModeType.Record) {
 			v = Vector3.zero;
-			if (Input.GetKeyDown(KeyCode.DownArrow)) { v = -Vector2.up; records.Add((Time.time - startRecordTime ).ToString() + ":" + "d"); }
-			else if (Input.GetKeyDown(KeyCode.UpArrow)) { v = Vector2.up; records.Add((Time.time - startRecordTime ).ToString() + ":" + "u"); }
-			else if (Input.GetKeyDown(KeyCode.RightArrow)) { v = Vector2.right; records.Add((Time.time - startRecordTime ).ToString() + ":" + "r"); }
-			else if (Input.GetKeyDown(KeyCode.LeftArrow)) { v = -Vector2.right; records.Add((Time.time - startRecordTime ).ToString() + ":" + "l"); }
+			recordTime += Time.deltaTime;
+			if (Input.GetKeyDown(KeyCode.DownArrow)) { v = -Vector2.up; records.Add( recordTime.ToString() + ":" + "d"); }
+			else if (Input.GetKeyDown(KeyCode.UpArrow)) { v = Vector2.up; records.Add(recordTime.ToString() + ":" + "u"); }
+			else if (Input.GetKeyDown(KeyCode.RightArrow)) { v = Vector2.right; records.Add(recordTime.ToString() + ":" + "r"); }
+			else if (Input.GetKeyDown(KeyCode.LeftArrow)) { v = -Vector2.right; records.Add(recordTime.ToString() + ":" + "l"); }
 			if (v!=Vector3.zero) {
 				//player1.transform.Translate(v * speed * Time.deltaTime);
 				player1.transform.rigidbody2D.velocity = v*speed;
@@ -59,14 +59,15 @@ public class Player : MonoBehaviour {
 			}
 
 		} else if (gameMode == gameModeType.Replay) { //replay
-			if (recordIndex1 < records.Count && float.Parse(records[recordIndex1].Split(':')[0]) + startReplayTime <= Time.time ){
+			recordTime+=Time.deltaTime;
+			if (recordIndex1 < records.Count && float.Parse(records[recordIndex1].Split(':')[0]) <= recordTime ){
 				var v = vectorForKey(records[recordIndex1].Split(':')[1]);
 				if (v!=Vector3.zero) //player1.transform.Translate(v * speed * Time.deltaTime);
 					player1.transform.rigidbody2D.velocity = v*speed;
 				recordIndex1++;
 			}
 			//move player2 
-			if (recordIndex2 < player2Records.Count && float.Parse(player2Records[recordIndex2].Split(':')[0]) + startReplayTime <= Time.time ){
+			if (recordIndex2 < player2Records.Count && float.Parse(player2Records[recordIndex2].Split(':')[0]) <= recordTime ){
 				var v = vectorForKey(player2Records[recordIndex2].Split(':')[1]);
 				if (v!=Vector3.zero) //player2.transform.Translate(v * speed * Time.deltaTime);
 					player2.transform.rigidbody2D.velocity = v*speed;
@@ -125,7 +126,7 @@ public class Player : MonoBehaviour {
 	void startRecording(){
 		initBoard();
 
-		startRecordTime = Time.time;
+		recordTime = 0;
 		text.text = lvlTime[lvl].ToString();
 		InvokeRepeating("updateCounter", 1 ,1);
 		gameMode = gameModeType.Record;
@@ -166,9 +167,9 @@ public class Player : MonoBehaviour {
 				player2Records = recordsFromString( (data[0] != playerId) ? data[1] : data[3] );
 
 				text.text = "Replay";
-				startReplayTime = Time.time;
+				recordTime = 0;
 				gameMode = gameModeType.Replay;
-				Invoke("startRecording", lvlTime[lvl]+2);
+				Invoke("startRecording", lvlTime[lvl]+5);
 			}
 			break;		
 		default: break;
