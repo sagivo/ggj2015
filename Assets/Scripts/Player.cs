@@ -158,8 +158,8 @@ public class Player : MonoBehaviour {
 				player2 = (data[1] != playerId) ? gameObject : player2Prefub;
 				startPos1 = player1.transform.position;
 				startPos2 = player2.transform.position;
-				player1.GetComponent<SpriteRenderer>().color = Color.blue;
-				player2.GetComponent<SpriteRenderer>().color = Color.red;
+				//player1.GetComponent<SpriteRenderer>().color = Color.blue;
+				//player2.GetComponent<SpriteRenderer>().color = Color.red;
 				startRecording();
 			}
 			break;

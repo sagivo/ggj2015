@@ -97,7 +97,7 @@ Transform:
   m_GameObject: {fileID: 193274}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 17.6202965, y: -1.3659029, z: .01171875}
-  m_LocalScale: {x: 1.60000002, y: 1.60000002, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 493278}
   m_RootOrder: 2
@@ -109,7 +109,7 @@ Transform:
   m_GameObject: {fileID: 193276}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -17.634243, y: -1.36851108, z: .01171875}
-  m_LocalScale: {x: 1.60000002, y: 1.60000002, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 493278}
   m_RootOrder: 1
@@ -120,7 +120,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 193278}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.0700000003, y: 1.75999999, z: -.00999999978}
+  m_LocalPosition: {x: -.0729945749, y: -9.26409054, z: -.00999999978}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 22454990}
@@ -167,7 +167,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Radius: .879999995
+  m_Radius: 1.39999998
   m_Center: {x: 0, y: 0}
 --- !u!58 &5893278
 CircleCollider2D:
@@ -178,7 +178,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Radius: .879999995
+  m_Radius: 1.39999998
   m_Center: {x: 0, y: 0}
 --- !u!114 &11454988
 MonoBehaviour:
@@ -298,7 +298,7 @@ SpriteRenderer:
   m_ScaleInLightmap: 1
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a956e23cbd66f1247ab4475d10b26d6a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6d200180cc91d8949a8ed9343c8c9e97, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!212 &21293278
 SpriteRenderer:
@@ -320,7 +320,7 @@ SpriteRenderer:
   m_ScaleInLightmap: 1
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a956e23cbd66f1247ab4475d10b26d6a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 86a43dbce13d9ea4aaf92cdd1ee46a67, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!222 &22254992
 CanvasRenderer:
