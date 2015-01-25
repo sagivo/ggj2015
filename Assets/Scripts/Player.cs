@@ -42,7 +42,7 @@ public class Player : MonoBehaviour {
 		};
 	}
 	
-	void Update() {
+	void FixedUpdate() {
 		if (gameMode == gameModeType.Record) {
 			v = Vector3.zero;
 			if (Input.GetKeyDown(KeyCode.DownArrow)) { v = -Vector2.up; records.Add((Time.time - startRecordTime ).ToString() + ":" + "d"); }
