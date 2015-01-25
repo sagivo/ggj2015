@@ -66,7 +66,7 @@ public class Player : MonoBehaviour {
 
 		} else if (gameMode == gameModeType.Replay) { //replay
 			recordTime+=Time.deltaTime;
-			if (recordIndex1 < records.Count && Mathf.Abs(float.Parse(records[recordIndex1].Split(':')[0]) - recordTime) <= 0.01 ){
+			if (recordIndex1 < records.Count && Mathf.Abs(float.Parse(records[recordIndex1].Split(':')[0]) - recordTime) <= 0.001 ){
 				var v = vectorForKey(records[recordIndex1].Split(':')[1]);
 				if (v!=Vector3.zero) //player1.transform.Translate(v * speed * Time.deltaTime);
 					player1.transform.rigidbody2D.velocity = v*speed;
