@@ -137,6 +137,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 11458158, guid: ce5073a998130428abe3a5d5946b5192, type: 2}
+      propertyPath: lasers.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 458160, guid: ce5073a998130428abe3a5d5946b5192, type: 2}
       propertyPath: m_LocalPosition.x
       value: -.0299999993
@@ -378,8 +382,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2d375df26f3d4ab0a5c0cd6cc30e957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lasers:
-  - {fileID: 1309184701}
+  lasers: []
 --- !u!114 &327138060
 MonoBehaviour:
   m_ObjectHideFlags: 0
