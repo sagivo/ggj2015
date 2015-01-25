@@ -19,8 +19,6 @@ public class Test : MonoBehaviour {
 		else if (Input.GetKeyDown(KeyCode.LeftArrow)) v = -Vector2.right;
 		if (v!=Vector2.zero) {
 
-			//Mathf.MoveTowards(
-			//transform.position = Vector3.Lerp(transform.position, transform.position + new Vector3(v.x,v.y), Time.deltaTime*speed);
 			//transform.Translate(v * speed * Time.deltaTime);
 			transform.rigidbody2D.velocity = v*speed;
 			//rigidbody2D.AddForce (Vector3.forward * speed);

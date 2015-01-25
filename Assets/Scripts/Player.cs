@@ -123,7 +123,7 @@ public class Player : MonoBehaviour {
 		player1.transform.rigidbody2D.velocity = player2.transform.rigidbody2D.velocity = Vector2.zero;
 	}
 
-	void startRecording(){
+	public void startRecording(){
 		initBoard();
 
 		recordTime = 0;
@@ -169,7 +169,7 @@ public class Player : MonoBehaviour {
 				text.text = "Replay";
 				recordTime = 0;
 				gameMode = gameModeType.Replay;
-				Invoke("startRecording", lvlTime[lvl]);
+				//Invoke("startRecording", lvlTime[lvl]);
 			}
 			break;		
 		default: break;
