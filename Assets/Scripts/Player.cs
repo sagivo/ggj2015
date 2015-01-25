@@ -30,7 +30,7 @@ public class Player : MonoBehaviour {
 	void Start () {
 		records = new List<string>();
 		gameMode = gameModeType.init;
-
+		v = Vector3.zero;
 		n = GetComponent<Networking>();
 		n.POST("/init",null);
 
@@ -44,15 +44,15 @@ public class Player : MonoBehaviour {
 	
 	void Update() {
 		if (gameMode == gameModeType.Record) {
-			v = Vector3.zero;
+			//v = Vector3.zero;
 			if (Input.GetKeyDown(KeyCode.DownArrow)) { v = -Vector2.up; records.Add((Time.time - startRecordTime ).ToString() + ":" + "d"); }
 			else if (Input.GetKeyDown(KeyCode.UpArrow)) { v = Vector2.up; records.Add((Time.time - startRecordTime ).ToString() + ":" + "u"); }
 			else if (Input.GetKeyDown(KeyCode.RightArrow)) { v = Vector2.right; records.Add((Time.time - startRecordTime ).ToString() + ":" + "r"); }
 			else if (Input.GetKeyDown(KeyCode.LeftArrow)) { v = -Vector2.right; records.Add((Time.time - startRecordTime ).ToString() + ":" + "l"); }
-			if (v!=Vector3.zero) {
+			//if (v!=Vector3.zero) {
 				player1.transform.Translate(v * speed * Time.deltaTime);
 				//transform.position += v * speed * Time.deltaTime;
-			}
+			//}
 			if (Input.GetKeyDown(KeyCode.Space)) {
 				//finishLvl();
 			}
