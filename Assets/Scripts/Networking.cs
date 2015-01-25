@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic; 
 
+
 public class Networking : MonoBehaviour {
 
 	public System.Action<string> OnGetComplete;
@@ -43,7 +44,7 @@ public class Networking : MonoBehaviour {
 	private IEnumerator WaitForRequest(WWW www, bool post)
 	{
 		yield return www;
-		Debug.Log(www.url + ":" + www.text);
+		Debug.Log(((post) ? "POST " : "GET ") +  www.url + ":" + www.text);
 		if (www.error == null)
 		{
 			if (OnGetComplete!=null && !post) OnGetComplete(www.text);

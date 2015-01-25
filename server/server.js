@@ -28,14 +28,16 @@ app.post('/init', function(req, res){
 });
 
 app.get('/check/:player_id', function(req, res){
-  if (players[req.params.player_id].game_id) {
-    game = games[players[req.params.player_id].game_id];
-    res.send(game.game_id + '|' + game.player1 + '|' + games.player2 + '|' + game.lvl);  // game_id | player1 | player2 | lvl
+  var game_id = players[req.params.player_id].game_id;
+  if (game_id) {
+    game = games[game_id];
+    res.send(game_id + '|' + game.player1 + '|' + games.player2 + '|' + game.lvl);  // game_id | player1 | player2 | lvl
   }
   else res.send('wait');
 });
 
 app.post('/actions/:player_id', function(req, res){
+  if (players[req.params.player_id].actions) players[game.player1].actions = players[game.player2].actions = null;
   players[req.params.player_id].actions = req.body.actions;
   res.send('ok');
 });
@@ -48,11 +50,11 @@ app.get('/actions/:game_id', function(req, res){
   res.send(s); //player1 | actions1 | player2 | actions2
 });
 
-app.post('/lvlup/:game_id', function(req, res){
+app.post('/next/:game_id', function(req, res){
   var game = games[req.params.game_id];
   if (players[game.player1].actions){
     players[game.player1].actions = null; players[game.player2].actions = null;
-    game.lvl++;
+    if (req.body.lvlup == '1') game.lvl++;
   }
   res.send('ok');
 });
