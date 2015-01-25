@@ -37,10 +37,9 @@ app.get('/check/:player_id', function(req, res){
 });
 
 app.post('/actions/:player_id', function(req, res){
-  if (players[req.params.player_id].actions){players[game.player1].actions = null; players[game.player2].actions = null;}
+  if (players[req.params.player_id].actions) players[game.player1].actions = players[game.player2].actions = null;
   players[req.params.player_id].actions = req.body.actions;
   res.send('ok');
-  }
 });
 
 app.get('/actions/:game_id', function(req, res){
