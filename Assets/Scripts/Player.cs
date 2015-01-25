@@ -50,7 +50,8 @@ public class Player : MonoBehaviour {
 			else if (Input.GetKeyDown(KeyCode.RightArrow)) { v = Vector2.right; records.Add((Time.time - startRecordTime ).ToString() + ":" + "r"); }
 			else if (Input.GetKeyDown(KeyCode.LeftArrow)) { v = -Vector2.right; records.Add((Time.time - startRecordTime ).ToString() + ":" + "l"); }
 			if (v!=Vector3.zero) {
-				player1.transform.Translate(v * speed * Time.deltaTime);
+				//player1.transform.Translate(v * speed * Time.deltaTime);
+				player1.transform.rigidbody2D.velocity = v*speed;
 				//transform.position += v * speed * Time.deltaTime;
 			}
 			if (Input.GetKeyDown(KeyCode.Space)) {
