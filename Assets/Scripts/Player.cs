@@ -132,7 +132,6 @@ public class Player : MonoBehaviour {
 				var data = d.Split('|');
 				CancelInvoke("checkForPlayers");
 				gameId = data[0];
-				Debug.Log("gameId" + gameId);
 				player1 = (data[1] == playerId) ? gameObject : player2Prefub;
 				player2 = (data[1] != playerId) ? gameObject : player2Prefub;
 				startPos1 = player1.transform.position;
