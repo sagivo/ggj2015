@@ -14,8 +14,8 @@ public class Player : MonoBehaviour {
 	Vector3 startPos2;
 	string playerId;
 	string gameId; 
-	float speed = 5;
-	Vector3 v, v1, v2;
+	float speed = 40;
+	Vector3 v;
 	Networking n;
 	List<string> records;
 	int recordIndex1 = 0;
@@ -30,7 +30,7 @@ public class Player : MonoBehaviour {
 	void Start () {
 		records = new List<string>();
 		gameMode = gameModeType.init;
-		v = v1 = v2 = Vector3.zero;
+
 		n = GetComponent<Networking>();
 		n.POST("/init",null);
 
@@ -42,35 +42,35 @@ public class Player : MonoBehaviour {
 		};
 	}
 	
-	void FixedUpdate() {
+	void Update() {
 		if (gameMode == gameModeType.Record) {
-			//v = Vector3.zero;
+			v = Vector3.zero;
 			if (Input.GetKeyDown(KeyCode.DownArrow)) { v = -Vector2.up; records.Add((Time.time - startRecordTime ).ToString() + ":" + "d"); }
 			else if (Input.GetKeyDown(KeyCode.UpArrow)) { v = Vector2.up; records.Add((Time.time - startRecordTime ).ToString() + ":" + "u"); }
 			else if (Input.GetKeyDown(KeyCode.RightArrow)) { v = Vector2.right; records.Add((Time.time - startRecordTime ).ToString() + ":" + "r"); }
 			else if (Input.GetKeyDown(KeyCode.LeftArrow)) { v = -Vector2.right; records.Add((Time.time - startRecordTime ).ToString() + ":" + "l"); }
-			//if (v!=Vector3.zero) {
+			if (v!=Vector3.zero) {
 				player1.transform.Translate(v * speed * Time.deltaTime);
 				//transform.position += v * speed * Time.deltaTime;
-			//}
+			}
 			if (Input.GetKeyDown(KeyCode.Space)) {
 				//finishLvl();
 			}
 
 		} else if (gameMode == gameModeType.Replay) { //replay
 			if (recordIndex1 < records.Count && float.Parse(records[recordIndex1].Split(':')[0]) + startReplayTime <= Time.time ){
-				v1 = vectorForKey(records[recordIndex1].Split(':')[1]);
-				//if (v!=Vector3.zero) 
-					
+				var v = vectorForKey(records[recordIndex1].Split(':')[1]);
+				if (v!=Vector3.zero) //player1.transform.Translate(v * speed * Time.deltaTime);
+					player1.transform.rigidbody2D.velocity = v*speed;
 				recordIndex1++;
-			}player1.transform.Translate(v1 * speed * Time.deltaTime);
+			}
 			//move player2 
 			if (recordIndex2 < player2Records.Count && float.Parse(player2Records[recordIndex2].Split(':')[0]) + startReplayTime <= Time.time ){
-				v2 = vectorForKey(player2Records[recordIndex2].Split(':')[1]);
-				//if (v!=Vector3.zero) 
-					
+				var v = vectorForKey(player2Records[recordIndex2].Split(':')[1]);
+				if (v!=Vector3.zero) //player2.transform.Translate(v * speed * Time.deltaTime);
+					player2.transform.rigidbody2D.velocity = v*speed;
 				recordIndex2++;
-			}player2.transform.Translate(v2 * speed * Time.deltaTime);
+			}
 		}
 	}
 
