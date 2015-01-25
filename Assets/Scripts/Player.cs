@@ -107,6 +107,7 @@ public class Player : MonoBehaviour {
 	}
 
 	void finishLvl(){
+		initBoard();
 		string actions = getRecords();
 		n.POST("/actions/"+playerId, "actions", actions);
 		gameMode = gameModeType.PostingActions;
@@ -155,7 +156,6 @@ public class Player : MonoBehaviour {
 			if (d == "ok"){
 				InvokeRepeating("checkForPlayerActions",0,2);
 				gameMode = gameModeType.waitingForPartnerActions;
-				player1.transform.position = startPos1;
 			}
 			break;
 		case gameModeType.waitingForPartnerActions:
@@ -164,8 +164,6 @@ public class Player : MonoBehaviour {
 				var data = d.Split('|');
 				records = recordsFromString( (data[0] == playerId) ? data[1] : data[3] );
 				player2Records = recordsFromString( (data[0] != playerId) ? data[1] : data[3] );
-
-				initBoard();
 
 				text.text = "Replay";
 				startReplayTime = Time.time;
