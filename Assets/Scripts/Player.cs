@@ -42,7 +42,7 @@ public class Player : MonoBehaviour {
 		};
 	}
 	
-	void FixedUpdate() {
+	void Update() {
 		if (gameMode == gameModeType.Record) {
 			v = Vector3.zero;
 			if (Input.GetKeyDown(KeyCode.DownArrow)) { v = -Vector2.up; records.Add((Time.time - startRecordTime ).ToString() + ":" + "d"); }
@@ -114,10 +114,15 @@ public class Player : MonoBehaviour {
 		//lvl++;
 	}
 
-	void startRecording(){
+	void initBoard(){
 		player1.transform.position = startPos1; 
 		player2.transform.position = startPos2;
 		player1.transform.rotation = player2.transform.rotation = Quaternion.identity;
+		player1.transform.rigidbody2D.velocity = player2.transform.rigidbody2D.velocity = Vector2.zero;
+	}
+
+	void startRecording(){
+		initBoard();
 
 		startRecordTime = Time.time;
 		text.text = lvlTime[lvl].ToString();
@@ -156,19 +161,16 @@ public class Player : MonoBehaviour {
 		case gameModeType.waitingForPartnerActions:
 			if (d!="wait"){
 				CancelInvoke("checkForPlayerActions");
-				gameMode = gameModeType.Replay;
 				var data = d.Split('|');
 				records = recordsFromString( (data[0] == playerId) ? data[1] : data[3] );
 				player2Records = recordsFromString( (data[0] != playerId) ? data[1] : data[3] );
 
-				player1.transform.position = startPos1; 
-				player2.transform.position = startPos2;
-				player1.transform.rotation = player2.transform.rotation = Quaternion.identity;
+				initBoard();
 
-				gameMode = gameModeType.Replay;
-				startReplayTime = Time.time;
 				text.text = "Replay";
-				Invoke("startRecording", lvlTime[lvl]+ 5);
+				startReplayTime = Time.time;
+				gameMode = gameModeType.Replay;
+				//Invoke("startRecording", lvlTime[lvl]+ 5);
 			}
 			break;		
 		default: break;
