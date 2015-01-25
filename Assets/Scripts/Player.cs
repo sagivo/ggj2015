@@ -156,6 +156,7 @@ public class Player : MonoBehaviour {
 				var data = d.Split('|');
 				records = recordsFromString( (data[0] == playerId) ? data[1] : data[3] );
 				player2Records = recordsFromString( (data[0] != playerId) ? data[1] : data[3] );
+				player1.transform.rotation = player2.transform.rotation = Quaternion.identity;
 				gameMode = gameModeType.Replay;
 				startReplayTime = Time.time;
 				text.text = "Replay";
