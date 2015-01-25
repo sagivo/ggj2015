@@ -261,6 +261,7 @@ GameObject:
   - 50: {fileID: 999972385}
   - 114: {fileID: 999972390}
   - 114: {fileID: 999972389}
+  - 114: {fileID: 999972391}
   m_Layer: 0
   m_Name: Player1
   m_TagString: Untagged
@@ -276,7 +277,7 @@ Rigidbody2D:
   m_GameObject: {fileID: 999972384}
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: .0500000007
+  m_AngularDrag: 0
   m_GravityScale: 0
   m_FixedAngle: 0
   m_IsKinematic: 0
@@ -352,6 +353,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player2Prefub: {fileID: 1383950388}
   text: {fileID: 1490268228}
+--- !u!114 &999972391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 999972384}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a251d1f902ae9476e9f1cc136ddfe663, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1383950388
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,7 +390,7 @@ Rigidbody2D:
   m_GameObject: {fileID: 1383950388}
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: .0500000007
+  m_AngularDrag: 0
   m_GravityScale: 0
   m_FixedAngle: 0
   m_IsKinematic: 0
@@ -425,7 +437,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1383950388}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.23999977, y: 0, z: 0}
+  m_LocalPosition: {x: -2.67000008, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
