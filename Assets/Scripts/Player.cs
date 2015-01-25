@@ -7,7 +7,7 @@ public class Player : MonoBehaviour {
 	public GameObject player2Prefub;
 	public Text text;
 	int lvl = 1;
-	int[] lvlTime = new int[]{0,30,7,15,35};
+	int[] lvlTime = new int[]{0,20,7,15,35};
 	//string player2Id;
 	List<string> player2Records;
 	Vector3 startPos1;
