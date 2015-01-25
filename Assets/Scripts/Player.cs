@@ -14,7 +14,7 @@ public class Player : MonoBehaviour {
 	Vector3 startPos2;
 	string playerId;
 	string gameId; 
-	float speed = 40;
+	float speed = 5;
 	Vector3 v;
 	Networking n;
 	List<string> records;
